@@ -10,7 +10,7 @@ Needed files:
 - derived.config.json
   - {fields:[], panelArea, panelTilt, panelAzimuth}
 - pusher.config.json
-  - {key,options:{cluster,forceTLS},channelIDs:[],channelNames:[],eventName}
+  - {key, options:{cluster, forceTLS}, channelIDs:[], channelNames:[], eventName}
 - solcast.config.json
   - {url, fields:[]}
 
