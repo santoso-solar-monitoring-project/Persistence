@@ -14,4 +14,4 @@ Needed files:
 - solcast.config.json
   - {url, fields:[]}
 
-Then you need to authenticate on first run with a google account for the google drive you will store everything inside. The folder structure must match that of https://drive.google.com/drive/u/1/folders/1fIbkh2C2daDOJPk-vvpWKOTbHOwvjiS2 exactly, and folder IDs should be updated inside main.js.
+Then you need to authenticate on first run with a google account for the google drive you will store everything inside. The folder structure must match that of https://drive.google.com/drive/u/1/folders/1fIbkh2C2daDOJPk-vvpWKOTbHOwvjiS2 exactly, and folder IDs should be updated inside main.js. Also, permissions of the root folder must be set to at least as relaxed as "Anyone with link can view". Otherwise, the website needs to be refactored not to use an API key to access the sheets but OAuth2 instead.
