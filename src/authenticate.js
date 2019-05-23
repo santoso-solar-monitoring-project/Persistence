@@ -1,8 +1,9 @@
-import { LOG, promisify, ERROR } from './utils';
-import { promises as fs } from 'fs';
+import { chunk } from 'lodash';
 import { google } from 'googleapis';
 import path from 'path';
+import { promises as fs } from 'fs';
 import readline from 'readline';
+import { LOG, promisify, ERROR } from './utils';
 
 // If modifying these scopes, delete token.json (for modifications to take effect).
 const SCOPES = [
@@ -30,10 +31,7 @@ async function authorize(credentials) {
 
   await fs
     .readFile(TOKEN_PATH)
-    .then(
-      token => oAuth2Client.setCredentials(JSON.parse(token)),
-      () => getNewToken(oAuth2Client)
-    );
+    .then(token => oAuth2Client.setCredentials(JSON.parse(token)), () => getNewToken(oAuth2Client));
 
   return oAuth2Client;
 }
@@ -48,24 +46,32 @@ async function getNewToken(oAuth2Client) {
     scope: SCOPES,
   });
 
-  console.log('Authorize this app by visiting this url:', authUrl);
+  /* eslint-disable no-console */
+  console.log('\n * * *  |  FIRST-LAUNCH SIGN IN\n');
+  console.log(' STEP 1 | Authorize this app by visiting the link below:');
+  // console.log();
+  // console.log(chunk(authUrl, 82).map(line => '  ' + line.join('')).join('\n'));
+  console.log(`\n${authUrl}\n`);
+  // console.log();
+  /* eslint-enable no-console */
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
 
   const code = await new Promise(resolve =>
-    rl.question('Enter the code from that page here: ', code => {
+    rl.question(' STEP 2 | Paste the code you receive below after signing:\n\n  ', code => {
+      console.log(); // eslint-disable-line no-console
       rl.close();
       resolve(code);
     })
   );
-  LOG(code);
+
   await oAuth2Client.getToken(code).then(
     token => {
       oAuth2Client.setCredentials(token);
       // Store the token to disk for later program executions
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token)).then(
+      fs.writeFile(TOKEN_PATH, JSON.stringify(token, null, 2)).then(
         () => LOG('Token stored to', TOKEN_PATH),
         err => {
           ERROR(`Couldn't write token to disk:`, err.stack);
@@ -80,7 +86,7 @@ async function getNewToken(oAuth2Client) {
   );
 }
 
-export default async function authenticate() {
+export async function authenticate() {
   // Load client secrets from a local file.
   const auth = await fs.readFile(CREDENTIALS_PATH).then(
     content => authorize(JSON.parse(content)),
@@ -93,3 +99,4 @@ export default async function authenticate() {
   google.options({ auth });
   return auth;
 }
+(async () => await authenticate())();

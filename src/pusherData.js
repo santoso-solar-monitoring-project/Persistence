@@ -1,5 +1,5 @@
-import { ERROR, LOG, M, WARN } from './utils';
 import Pusher from 'pusher-js';
+import { ERROR, LOG, M, WARN } from './utils';
 import pusherConfig from '../config/pusher.config.json';
 
 // Configuration to connect to Pusher.
@@ -13,7 +13,7 @@ const EVENT_NAME = pusherConfig.eventName;
 
 // Event handler for new data.
 function stage(ch, data) {
-  const [ts, value] = data;
+  const [ ts, value ] = data;
   // Create sample for this timestamp if doesn't exist.
   const sample = (stagingBuffer[ts] = stagingBuffer[ts] || []);
   // Write channel value to sample.
@@ -21,7 +21,7 @@ function stage(ch, data) {
   if (sample.filter(Boolean).length === CHANNEL_ID.length) {
     // All channels accounted. Place sample in ready buffer.
     const localTime = M(ts).format('LTS');
-    readyBuffer.push([ts, localTime, ...sample]);
+    readyBuffer.push([ ts, localTime, ...sample ]);
     stagingBuffer.delete(ts);
   }
 }
@@ -36,18 +36,14 @@ const readyBuffer = [];
 const monitorID = setInterval(() => {
   if (stagingBuffer.size > 10) {
     WARN(
-      `Pusher staging buffer is showing undesireable build-up (size ${
-        stagingBuffer.size
-      }). If this number is too big, it could mean not all channels are being transmitted (${CHANNEL_ID.join(
+      `Pusher staging buffer is showing undesireable build-up (size ${stagingBuffer.size}). If this number is too big, it could mean not all channels are being transmitted (${CHANNEL_ID.join(
         ', '
       )}). This script waits for all channels to report a value before marking the sample as ready for flushing.`
     );
   }
   if (stagingBuffer.size > 1000) {
     ERROR(
-      `Pusher staging buffer has exceeded 1000 elements (size: ${
-        stagingBuffer.size
-      }), which indicates not all Pusher channels are being transmitted.`
+      `Pusher staging buffer has exceeded 1000 elements (size: ${stagingBuffer.size}), which indicates not all Pusher channels are being transmitted.`
     );
   }
 }, 60e3);
@@ -55,9 +51,7 @@ const monitorID = setInterval(() => {
 // Attach event listeners per channel.
 CHANNEL_ID.forEach(ch => {
   const channel = pusher.subscribe(ch);
-  channel.bind(EVENT_NAME, ({ payload }) =>
-    payload.forEach(pair => stage(ch, pair))
-  );
+  channel.bind(EVENT_NAME, ({ payload }) => payload.forEach(pair => stage(ch, pair)));
 });
 
 LOG(`Listening to Pusher channels: ${CHANNEL_ID.join(', ')}.`);
@@ -65,4 +59,4 @@ LOG(`Listening to Pusher channels: ${CHANNEL_ID.join(', ')}.`);
 readyBuffer.disconnect = () => (
   clearInterval(monitorID), LOG('Disconnecting Pusher.'), pusher.disconnect()
 );
-export default readyBuffer;
+export const pusherData = readyBuffer;

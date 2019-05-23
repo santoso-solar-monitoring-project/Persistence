@@ -4,19 +4,22 @@
   "dependencies": {
     "axios": "^0.18.0",
     "googleapis": "^39.2.0",
+    "lodash": "^4.17.11",
     "moment-timezone": "^0.5.25",
     "pusher-js": "^4.4.0"
   },
+  "main": "src/index.js",
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
-    "jobs": "yarn forever list",
-    "start": "bash -c 'yarn forever start -o logs/$(date +\"%m-%d-%Y\").log src/index.js'",
-    "stop": "yarn forever stop src/index.js",
+    "start": "run-script-os",
+    "start:win32": "scripts\\RUN_ME.cmd",
+    "start:darwin:linux": "scripts/RUN_ME.sh",
     "once": "node src/index.js"
   },
   "devDependencies": {
-    "esm": "^3.2.22",
-    "forever": "^1.0.0"
+    "eslint": "^5.16.0",
+    "esm": "^3.2.25",
+    "run-script-os": "^1.0.5"
   }
 }
