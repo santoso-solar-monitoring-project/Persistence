@@ -3,6 +3,8 @@ Setup
 
 This app won't work without a properly configured `config/` folder. The `config/` folder is not included in this repository because it contains sensitive information (API keys).
 
+There is already a `config/` folder configured upload data to [our senior design team's Google Drive](https://drive.google.com/drive/folders/1s8AXaWTb0pXfrUbg9JKaPvqVm-QpmTAI). This `config/` is installed on the computer connected to the TV in the lab. The `config/` can also be found [here](https://drive.google.com/drive/folders/1HLl2Vdr5BTxtahNv9XKAwP3j8wuvPY0x).
+
 The following files are needed in the `config/` folder:
 ## `credentials.json` (sample below)
 ```JSON
@@ -103,7 +105,7 @@ On the first run of the app, you will be asked to sign in with a Google account 
 
 To change the Google Drive where data is uploaded, delete `token.json` within the `config/` folder. (This file is created automatically after the first launch.)
 
-Additionally, `drive.json` and `today.json` are files created automatically by the app. These files contain the backup "application state", which just contains the resource IDs used to reference the Google Drive folders and files where data will be uploaded to today. (The file IDs [`today.json`] change daily. The folder IDs [`drive.json`] remain fixed.)
+Additionally, `token.json`, `drive.json`, and `today.json` are files created automatically by the app. These files contain the backup "application state", which just contains the resource IDs used to reference the Google Drive folders and files where data will be uploaded to today. (The file IDs [`today.json`] change daily. The folder IDs [`drive.json`] remain fixed.)
 
 Run
 ===
