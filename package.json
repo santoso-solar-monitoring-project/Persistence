@@ -4,7 +4,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "googleapis": "^39.2.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "moment-timezone": "^0.5.25",
     "pusher-js": "^4.4.0"
   },
