@@ -5,7 +5,7 @@
     "axios": "^0.18.0",
     "googleapis": "^39.2.0",
     "lodash": "^4.17.11",
-    "moment-timezone": "^0.5.25",
+    "moment-timezone": "^0.5.35",
     "pusher-js": "^4.4.0"
   },
   "main": "src/index.js",
